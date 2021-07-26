@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+bot:
+  name: hi_neighbor_bot
+  token: 1903431707:AAHv8F0i7DC5x5EDizvxfElRL9rTX9eKoJ4
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+
+hibernate:
+  dialect: org.hibernate.dialect.PostgreSQLDialect
+  hbm2ddl:
+    auto: create
+  ejb:
+    naming_strategy: org.hibernate.cfg.ImprovedNamingStrategy
+  show_sql: false
+  format_sql: true
