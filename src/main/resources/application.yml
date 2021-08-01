@@ -11,12 +11,6 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: postgres
-
-hibernate:
-  dialect: org.hibernate.dialect.PostgreSQLDialect
-  hbm2ddl:
-    auto: create
-  ejb:
-    naming_strategy: org.hibernate.cfg.ImprovedNamingStrategy
-  show_sql: false
-  format_sql: true
+  jpa:
+    hibernate:
+      ddl-auto: create

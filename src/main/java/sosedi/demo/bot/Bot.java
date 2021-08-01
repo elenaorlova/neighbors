@@ -1,33 +1,61 @@
 package sosedi.demo.bot;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import sosedi.demo.UpdateReceiver;
 
+import java.io.Serializable;
+import java.util.List;
+
+@Slf4j
 @Component
+@RequiredArgsConstructor
 public class Bot extends TelegramLongPollingBot {
+
+    private final UpdateReceiver updateReceiver;
+
+    @Value("${bot.name}")
+    private String botUsername;
+
+    @Value("${bot.token}")
+    private String botToken;
+
+    @Override
+    public void onUpdateReceived(Update update) {
+        List<PartialBotApiMethod<? extends Serializable>> messagesToSend = updateReceiver.handle(update);
+
+        if (messagesToSend != null && !messagesToSend.isEmpty()) {
+            messagesToSend.forEach(response -> {
+                if (response instanceof SendMessage) {
+                    executeWithExceptionCheck((SendMessage) response);
+                }
+            });
+        }
+    }
 
     @Override
     public String getBotUsername() {
-        return "hi_neighbor_bot";
+        return botUsername;
     }
 
     @Override
     public String getBotToken() {
-        return "1903431707:AAHv8F0i7DC5x5EDizvxfElRL9rTX9eKoJ4";
+        return botToken;
     }
 
-    @Override
-    public void onUpdateReceived(Update update) {
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId(String.valueOf(update.getMessage().getChatId()));
-        sendMessage.setText("Hi!");
+    private void executeWithExceptionCheck(SendMessage sendMessage) {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+            log.error("Error when sending message: {}, {}", sendMessage.getText(), e.getMessage());
         }
     }
 }
+

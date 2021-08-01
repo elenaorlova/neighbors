@@ -1,0 +1,74 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+    <changeSet author="elenaorlova" id="1627450718483-1">
+        <createTable tableName="notification">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="notification_pkey"/>
+            </column>
+            <column name="enabled" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="elenaorlova" id="1627450718483-2">
+        <createTable tableName="notification_notification_districts">
+            <column name="notification_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notification_districts_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="elenaorlova" id="1627450718483-3">
+        <createTable tableName="notification_district">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="notification_district_pkey"/>
+            </column>
+            <column name="district" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="notification_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="elenaorlova" id="1627450718483-4">
+        <addForeignKeyConstraint baseColumnNames="notification_id" baseTableName="notification_notification_districts" constraintName="fkb7qs39tc89nufmnusfdhvsug0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="notification" validate="true"/>
+    </changeSet>
+    <changeSet author="elenaorlova" id="1627450718483-5">
+        <addForeignKeyConstraint baseColumnNames="notification_id" baseTableName="notification_district" constraintName="fknel8lyi4jfqkx952yjotrdd43" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="notification" validate="true"/>
+    </changeSet>
+    <changeSet author="elenaorlova" id="1627450718483-6">
+        <addForeignKeyConstraint baseColumnNames="notification_districts_id" baseTableName="notification_notification_districts" constraintName="fklt7yx10xkqkhb7yw3pljc1ufh" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="notification_district" validate="true"/>
+    </changeSet>
+    <changeSet author="elenaorlova" id="1627450718483-7">
+        <addUniqueConstraint columnNames="notification_districts_id" constraintName="uk_5ve10tfunae9sj06g9m923grm" tableName="notification_notification_districts"/>
+    </changeSet>
+    <changeSet author="elenaorlova" id="1627450718483-8">
+        <createSequence cacheSize="1" cycle="false" dataType="bigint" incrementBy="1" maxValue="9223372036854775807" minValue="1" sequenceName="hibernate_sequence" startValue="1"/>
+    </changeSet>
+    <changeSet author="elenaorlova" id="1627450718483-9">
+        <createTable tableName="bot_user">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="bot_user_pkey"/>
+            </column>
+            <column name="chat_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="district" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="state" type="INTEGER">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
