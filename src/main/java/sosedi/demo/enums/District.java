@@ -1,10 +1,10 @@
 package sosedi.demo.enums;
 
-import java.util.List;
+import java.util.Set;
 
 public class District {
 
-    public final static List<String> districts = List.of(
+    public final static Set<String> districts = Set.of(
             "Академический", "Алексеевский", "Алтуфьевский", "Арбат", "Аэропорт",
             "Бабушкинский", "Басманный", "Беговой", "Бескудниковский", "Бибирево",
             "Бирюлёво Восточное", "Бирюлёво Западное", "Богородское", "Братеево",
