@@ -12,6 +12,7 @@ import sosedi.demo.handler.Handler;
 import sosedi.demo.repository.NotificationDistrictRepository;
 import sosedi.demo.repository.NotificationRepository;
 import sosedi.demo.repository.UserRepository;
+import sosedi.demo.service.MainService;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,7 +43,10 @@ public class SeveralDistrictsNotificationHandler implements Handler {
         userRepository.save(user);
         notificationDistrictRepository.saveAll(notificationDistricts);
         notificationRepository.save(notification);
-        return List.of(sendMessage);
+        List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
+        messages.add(sendMessage);
+        messages.addAll(MainService.createMainMenu(user));
+        return messages;
     }
 
     @Override

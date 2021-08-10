@@ -10,6 +10,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import sosedi.demo.UpdateReceiver;
+import sosedi.demo.entity.User;
+import sosedi.demo.enums.State;
+import sosedi.demo.repository.UserRepository;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,10 +30,23 @@ public class Bot extends TelegramLongPollingBot {
     @Value("${bot.token}")
     private String botToken;
 
+    private final UserRepository userRepository;
+
+    public void onState(User user, List<PartialBotApiMethod<? extends Serializable>> messagesToSend) {
+        if (messagesToSend != null && !messagesToSend.isEmpty()) {
+            messagesToSend.forEach(response -> {
+                if (response instanceof SendMessage) {
+                    executeWithExceptionCheck((SendMessage) response);
+                }
+            });
+        }
+        user.setState(State.NOTIFICATIONS_ON);
+        userRepository.save(user);
+    }
+
     @Override
     public void onUpdateReceived(Update update) {
         List<PartialBotApiMethod<? extends Serializable>> messagesToSend = updateReceiver.handle(update);
-
         if (messagesToSend != null && !messagesToSend.isEmpty()) {
             messagesToSend.forEach(response -> {
                 if (response instanceof SendMessage) {
