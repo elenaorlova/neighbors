@@ -8,6 +8,7 @@ import sosedi.demo.entity.Notification;
 import sosedi.demo.entity.NotificationDistrict;
 import sosedi.demo.entity.User;
 import sosedi.demo.enums.State;
+import sosedi.demo.enums.Text;
 import sosedi.demo.handler.Handler;
 import sosedi.demo.repository.NotificationDistrictRepository;
 import sosedi.demo.repository.NotificationRepository;
@@ -17,6 +18,7 @@ import sosedi.demo.service.MainService;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static sosedi.demo.utils.TelegramUtils.createMessageTemplate;
 
@@ -38,7 +40,13 @@ public class SeveralDistrictsNotificationHandler implements Handler {
             notificationDistricts.add(new NotificationDistrict(district));
         }
         notification.setNotificationDistricts(notificationDistricts);
-        sendMessage.setText("Договорились! Буду отправлять оповещения о съеме вещей в этом районе");
+        sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_SEVERAL_DISTRICTS.getText(
+                notificationDistricts.stream()
+                        .map(NotificationDistrict::getDistrict)
+                        .collect(Collectors.toList())
+                        .toString()
+                )
+        );
         user.setState(State.REGISTERED);
         userRepository.save(user);
         notificationDistrictRepository.saveAll(notificationDistricts);
@@ -50,8 +58,8 @@ public class SeveralDistrictsNotificationHandler implements Handler {
     }
 
     @Override
-    public State operatedBotState() {
-        return State.NOTIFICATION_DISTRICT_SELECTION;
+    public List<State> operatedBotState() {
+        return List.of(State.NOTIFICATION_DISTRICT_SELECTION);
     }
 
     @Override

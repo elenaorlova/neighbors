@@ -62,8 +62,8 @@ public class HomeDistrictHandler implements Handler {
     }
 
     @Override
-    public State operatedBotState() {
-        return State.REGISTRATION;
+    public List<State> operatedBotState() {
+        return List.of(State.REGISTRATION);
     }
 
     @Override

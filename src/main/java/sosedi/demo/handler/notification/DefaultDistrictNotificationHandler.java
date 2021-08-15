@@ -8,6 +8,7 @@ import sosedi.demo.entity.Notification;
 import sosedi.demo.entity.NotificationDistrict;
 import sosedi.demo.entity.User;
 import sosedi.demo.enums.Command;
+import sosedi.demo.enums.Text;
 import sosedi.demo.enums.State;
 import sosedi.demo.handler.Handler;
 import sosedi.demo.service.MainService;
@@ -35,7 +36,7 @@ public class DefaultDistrictNotificationHandler implements Handler {
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
         user.setState(State.REGISTERED);
         if (Command.SEVERAL_DISTRICTS_NOTIFICATIONS.equals(message)) {
-            sendMessage.setText("Введи название районов через запятую");
+            sendMessage.setText(Text.SELECTING_SEVERAL_AREAS_FOR_NOTIFICATIONS.getText());
             user.setState(State.NOTIFICATION_DISTRICT_SELECTION);
             messages.add(sendMessage);
         } else {
@@ -43,10 +44,10 @@ public class DefaultDistrictNotificationHandler implements Handler {
             NotificationDistrict notificationDistrict;
             if (Command.USER_DISTRICT_NOTIFICATIONS.equals(message)) {
                 notificationDistrict = new NotificationDistrict(user.getDistrict());
-                sendMessage.setText("Договорились! Буду отправлять оповещения о съёме в твоём районе");
+                sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_USER_DISTRICT.getText());
             }  else {
                 notificationDistrict = new NotificationDistrict("all");
-                sendMessage.setText("Договорились! Буду отправлять оповещения обо всех объявлениях о съёме");
+                sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_ALL_DISTRICTS.getText());
             }
             notification.setNotificationDistricts(List.of(notificationDistrict));
             notificationDistrictRepository.save(notificationDistrict);
@@ -59,7 +60,7 @@ public class DefaultDistrictNotificationHandler implements Handler {
     }
 
     @Override
-    public State operatedBotState() {
+    public List<State> operatedBotState() {
         return null;
     }
 

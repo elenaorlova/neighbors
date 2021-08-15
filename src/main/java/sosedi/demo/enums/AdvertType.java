@@ -1,6 +1,6 @@
 package sosedi.demo.enums;
 
-public enum ObjectType {
+public enum AdvertType {
     RENT,
     RENT_OFF
 }

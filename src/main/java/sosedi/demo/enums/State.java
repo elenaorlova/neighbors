@@ -9,5 +9,6 @@ public enum State {
     NOTIFICATIONS_ON,
     NOTIFICATIONS_OFF,
     RENTING,
-    RENTING_OUT
+    RENTING_OUT,
+    RENTING_OUT_SET_PRICE
 }

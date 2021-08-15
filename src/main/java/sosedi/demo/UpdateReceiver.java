@@ -52,7 +52,7 @@ public class UpdateReceiver {
     private Handler getHandlerByState(State state) {
         return handlers.stream()
                 .filter(handler -> handler.operatedBotState() != null)
-                .filter(handler -> handler.operatedBotState().equals(state))
+                .filter(handler -> handler.operatedBotState().stream().anyMatch(state::equals))
                 .findAny()
                 .orElseThrow(UnsupportedOperationException::new);
     }

@@ -36,6 +36,9 @@ public class User {
     @Column(name = "state", nullable = false)
     private State state = State.NEW_USER;
 
+    @Column(name = "current_advert")
+    private Long currentAdvert;
+
     public User(Long chatId, String username, String name) {
         this.chatId = chatId;
         this.username = username;

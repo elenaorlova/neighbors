@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import sosedi.demo.enums.State;
 import sosedi.demo.entity.User;
+import sosedi.demo.enums.Text;
 import sosedi.demo.repository.UserRepository;
 
 import java.io.Serializable;
@@ -23,18 +24,17 @@ public class StartHandler implements Handler {
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
         SendMessage welcomeMessage = createMessageTemplate(user);
-        welcomeMessage.setText("Привет! Я сервис шеринга для соседей. " +
-                "Тут ты можешь сдавать свои вещи и брать в аренду другие.");
+        welcomeMessage.setText(Text.WELCOME_MESSAGE.getText());
         SendMessage districtMessage = createMessageTemplate(user);
-        districtMessage.setText("В каком районе ты находишься?");
+        districtMessage.setText(Text.SELECT_USER_DISTRICT.getText());
         user.setState(State.REGISTRATION);
         userRepository.save(user);
         return List.of(welcomeMessage, districtMessage);
     }
 
     @Override
-    public State operatedBotState() {
-        return State.NEW_USER;
+    public List<State> operatedBotState() {
+        return List.of(State.NEW_USER);
     }
 
     @Override

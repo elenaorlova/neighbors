@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import sosedi.demo.entity.User;
 import sosedi.demo.enums.Command;
 import sosedi.demo.enums.State;
+import sosedi.demo.enums.Text;
 import sosedi.demo.repository.UserRepository;
 import sosedi.demo.utils.TelegramUtils;
 
@@ -23,10 +24,10 @@ public class MainMenuHandler implements Handler {
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
         SendMessage sendMessage = TelegramUtils.createMessageTemplate(user);
         if (Command.RENT.equals(message)) {
-            sendMessage.setText("Какой товар вы хотите снять? Введите название (например, дрель)");
+            sendMessage.setText(Text.REQUEST_RENTING_NAME.getText());
             user.setState(State.RENTING);
         } else if (Command.RENT_OUT.equals(message)) {
-            sendMessage.setText("Введите название товара");
+            sendMessage.setText(Text.REQUEST_RENTING_OUT_NAME.getText());
             user.setState(State.RENTING_OUT);
         }
         userRepository.save(user);
@@ -34,7 +35,7 @@ public class MainMenuHandler implements Handler {
     }
 
     @Override
-    public State operatedBotState() {
+    public List<State> operatedBotState() {
         return null;
     }
 
