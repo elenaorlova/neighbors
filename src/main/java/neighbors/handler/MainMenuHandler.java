@@ -1,9 +1,9 @@
 package neighbors.handler;
 
 import lombok.RequiredArgsConstructor;
-import neighbors.enums.Command;
-import neighbors.enums.State;
-import neighbors.enums.Text;
+import neighbors.enums.bot.Command;
+import neighbors.enums.bot.State;
+import neighbors.enums.bot.Text;
 import neighbors.utils.TelegramUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;

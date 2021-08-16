@@ -10,15 +10,15 @@ import javax.persistence.*;
 @Setter
 @Getter
 @NoArgsConstructor
-public class NotificationDistrict {
+public class District {
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(name = "district")
-    private String district;
+    @Column(name = "district_name")
+    private String districtName;
 
-    public NotificationDistrict(String district) {
-        this.district = district;
+    public District(String districtName) {
+        this.districtName = districtName;
     }
 }

@@ -10,6 +10,10 @@ public class TelegramUtils {
         return createMessageTemplate(String.valueOf(user.getChatId()));
     }
 
+    public static SendMessage createMessageTemplate(Long chatId) {
+        return createMessageTemplate(String.valueOf(chatId));
+    }
+
     public static SendMessage createMessageTemplate(String chatId) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);

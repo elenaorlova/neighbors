@@ -1,8 +1,8 @@
 package neighbors.handler;
 
 import lombok.RequiredArgsConstructor;
-import neighbors.enums.State;
-import neighbors.enums.Text;
+import neighbors.enums.bot.State;
+import neighbors.enums.bot.Text;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

@@ -1,7 +1,7 @@
 package neighbors.repository;
 
-import neighbors.entity.NotificationDistrict;
+import neighbors.entity.District;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface NotificationDistrictRepository extends JpaRepository<NotificationDistrict, Long> {
+public interface NotificationDistrictRepository extends JpaRepository<District, Long> {
 }

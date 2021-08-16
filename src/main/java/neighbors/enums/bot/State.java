@@ -1,4 +1,4 @@
-package neighbors.enums;
+package neighbors.enums.bot;
 
 public enum State {
     NEW_USER,

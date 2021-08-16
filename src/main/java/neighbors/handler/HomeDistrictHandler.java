@@ -1,14 +1,16 @@
 package neighbors.handler;
 
 import lombok.RequiredArgsConstructor;
+import neighbors.entity.District;
+import neighbors.enums.bot.Text;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import neighbors.enums.Command;
-import neighbors.enums.District;
-import neighbors.enums.State;
+import neighbors.enums.bot.Command;
+import neighbors.enums.DistrictEnum;
+import neighbors.enums.bot.State;
 import neighbors.entity.User;
 import neighbors.repository.UserRepository;
 
@@ -29,21 +31,20 @@ public class HomeDistrictHandler implements Handler {
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
         if (checkDistrict(message)) {
-            user.setDistrict(message.toLowerCase());
+            user.setUserDistrict(new District(message.toLowerCase()));
         } else {
             SendMessage sendMessage = createMessageTemplate(user);
-            sendMessage.setText("Не знаю про такой район. Может ты имел в виду какой-то из этих?"
-                    + getSimilarDistricts(message));
+            sendMessage.setText(Text.DISTRICT_NOT_FOUND.getText(getSimilarDistricts(message)));
             return List.of(sendMessage);
         }
         user.setState(State.DISTRICT_SELECTION);
         userRepository.save(user);
         SendMessage sendMessage = createMessageTemplate(user);
-        sendMessage.setText("Хочешь ли ты получать оповещения о сдаче вещей?");
+        sendMessage.setText(Text.REQUEST_TO_ENABLE_NOTIFICATIONS.getText());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<InlineKeyboardButton> inlineKeyboardButtons = List.of(
-                createButton("Да", Command.ENABLE_RENT_NOTIFICATIONS),
-                createButton("Нет", Command.DISABLE_RENT_NOTIFICATIONS)
+                createButton(Text.USER_ENABLE_NOTIFICATIONS.getText(), Command.ENABLE_RENT_NOTIFICATIONS),
+                createButton(Text.USER_DISABLE_NOTIFICATIONS.getText(), Command.DISABLE_RENT_NOTIFICATIONS)
         );
         inlineKeyboardMarkup.setKeyboard(List.of(inlineKeyboardButtons));
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
@@ -52,13 +53,13 @@ public class HomeDistrictHandler implements Handler {
 
     private List<String> getSimilarDistricts(String district) {
         String firstLetter = String.valueOf(district.charAt(0));
-        return District.districts.stream()
+        return DistrictEnum.districts.stream()
                 .filter(d -> d.startsWith(firstLetter))
                 .collect(Collectors.toList());
     }
 
     private boolean checkDistrict(String district) {
-        return District.districts.contains(district.toLowerCase());
+        return DistrictEnum.districts.contains(district.toLowerCase());
     }
 
     @Override

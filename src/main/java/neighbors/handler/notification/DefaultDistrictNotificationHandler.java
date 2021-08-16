@@ -1,11 +1,10 @@
 package neighbors.handler.notification;
 
 import lombok.RequiredArgsConstructor;
-import neighbors.entity.Notification;
-import neighbors.entity.NotificationDistrict;
-import neighbors.enums.Command;
-import neighbors.enums.State;
-import neighbors.enums.Text;
+import neighbors.entity.District;
+import neighbors.enums.bot.Command;
+import neighbors.enums.bot.State;
+import neighbors.enums.bot.Text;
 import neighbors.handler.Handler;
 import neighbors.repository.NotificationDistrictRepository;
 import neighbors.service.MainService;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import neighbors.entity.User;
-import neighbors.repository.NotificationRepository;
 import neighbors.repository.UserRepository;
 
 import java.io.Serializable;
@@ -27,7 +25,6 @@ import static neighbors.utils.TelegramUtils.createMessageTemplate;
 public class DefaultDistrictNotificationHandler implements Handler {
 
     private final UserRepository userRepository;
-    private final NotificationRepository notificationRepository;
     private final NotificationDistrictRepository notificationDistrictRepository;
 
     @Override
@@ -40,18 +37,16 @@ public class DefaultDistrictNotificationHandler implements Handler {
             user.setState(State.NOTIFICATION_DISTRICT_SELECTION);
             messages.add(sendMessage);
         } else {
-            Notification notification = notificationRepository.getNotificationByUserId(user.getId());
-            NotificationDistrict notificationDistrict;
+            District district;
             if (Command.USER_DISTRICT_NOTIFICATIONS.equals(message)) {
-                notificationDistrict = new NotificationDistrict(user.getDistrict());
+                district = user.getUserDistrict();
                 sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_USER_DISTRICT.getText());
             }  else {
-                notificationDistrict = new NotificationDistrict("all");
+                district = new District("all");
                 sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_ALL_DISTRICTS.getText());
             }
-            notification.setNotificationDistricts(List.of(notificationDistrict));
-            notificationDistrictRepository.save(notificationDistrict);
-            notificationRepository.save(notification);
+            user.setNotificationDistricts(List.of(district));
+            notificationDistrictRepository.save(district);
             messages.add(sendMessage);
             messages.addAll(MainService.createMainMenu(user));
         }

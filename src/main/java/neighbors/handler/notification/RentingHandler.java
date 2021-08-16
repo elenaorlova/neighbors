@@ -2,8 +2,8 @@ package neighbors.handler.notification;
 
 import lombok.RequiredArgsConstructor;
 import neighbors.entity.Advert;
-import neighbors.enums.State;
-import neighbors.enums.Text;
+import neighbors.enums.bot.State;
+import neighbors.enums.bot.Text;
 import neighbors.handler.Handler;
 import neighbors.service.MainService;
 import neighbors.utils.TelegramUtils;

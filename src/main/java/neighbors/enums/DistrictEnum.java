@@ -2,7 +2,7 @@ package neighbors.enums;
 
 import java.util.Set;
 
-public class District {
+public class DistrictEnum {
 
     public final static Set<String> districts = Set.of(
             "академический", "алексеевский", "алтуфьевский", "арбат", "аэропорт",

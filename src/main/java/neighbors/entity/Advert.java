@@ -5,12 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import neighbors.enums.AdvertType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-@Entity(name = "ITEM")
+@Entity(name = "ADVERT")
 @Setter
 @Getter
 @NoArgsConstructor
@@ -19,8 +16,8 @@ public class Advert {
     @GeneratedValue
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Column(name = "chat_id", nullable = false)
+    private Long chatId;
 
     @Column(name = "username", nullable = false)
     private String username;
@@ -36,6 +33,9 @@ public class Advert {
 
     @Column(name = "price")
     private Double price;
+
+    @OneToOne
+    private District district;
 
     @Column(name = "full_description")
     private String fullDescription;

@@ -1,4 +1,4 @@
-package neighbors.enums;
+package neighbors.enums.bot;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,6 +27,13 @@ public enum Text {
     REQUEST_PRODUCT_DESCRIPTION,
     CONFIRM_ADVERT,
     ADVERT_TEXT,
+    MAIN_MENU,
+    BUTTON_RENT,
+    BUTTON_RENT_OFF,
+    DISTRICT_NOT_FOUND,
+    REQUEST_TO_ENABLE_NOTIFICATIONS,
+    USER_ENABLE_NOTIFICATIONS,
+    USER_DISABLE_NOTIFICATIONS,
     NOTIFICATIONS_TURN_ON_IN_ALL_DISTRICTS;
 
     public String getText(Object... params) {

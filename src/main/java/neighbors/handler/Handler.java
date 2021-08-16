@@ -1,7 +1,7 @@
 package neighbors.handler;
 
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
-import neighbors.enums.State;
+import neighbors.enums.bot.State;
 import neighbors.entity.User;
 
 import java.io.Serializable;

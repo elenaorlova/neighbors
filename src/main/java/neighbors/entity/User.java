@@ -3,13 +3,11 @@ package neighbors.entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import neighbors.enums.State;
+import neighbors.enums.bot.State;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity(name = "BOT_USER")
 @Setter
@@ -24,14 +22,11 @@ public class User {
     @Column(name = "chat_id", nullable = false)
     private Long chatId;
 
-    @Column(name = "name")
-    private String name;
-
     @Column(name = "username")
     private String username;
 
-    @Column(name = "district")
-    private String district;
+    @OneToOne
+    private District userDistrict;
 
     @Column(name = "state", nullable = false)
     private State state = State.NEW_USER;
@@ -39,9 +34,14 @@ public class User {
     @Column(name = "current_advert")
     private Long currentAdvert;
 
-    public User(Long chatId, String username, String name) {
+    @Column(name = "sent_notifications")
+    private Boolean sentNotifications = false;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<District> notificationDistricts;
+
+    public User(Long chatId, String username) {
         this.chatId = chatId;
         this.username = username;
-        this.name = name;
     }
 }

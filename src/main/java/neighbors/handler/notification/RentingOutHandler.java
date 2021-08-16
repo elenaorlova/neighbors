@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import neighbors.entity.Advert;
 import neighbors.entity.User;
 import neighbors.enums.AdvertType;
-import neighbors.enums.State;
-import neighbors.enums.Text;
+import neighbors.enums.bot.State;
+import neighbors.enums.bot.Text;
 import neighbors.handler.Handler;
 import neighbors.repository.AdvertRepository;
 import neighbors.service.MainService;
@@ -34,15 +34,16 @@ public class RentingOutHandler implements Handler {
             Advert advert = new Advert();
             advert.setUsername(user.getUsername());
             advert.setAdvertType(AdvertType.RENT_OFF);
-            advert.setUserId(user.getId());
+            advert.setChatId(user.getChatId());
             advert.setName(message);
+            advert.setDistrict(user.getUserDistrict());
             advertRepository.save(advert);
             user.setCurrentAdvert(advert.getId());
             userRepository.save(user);
             sendMessage.setText(Text.REQUEST_PRODUCT_PRICE.getText());
             return List.of(sendMessage);
         }
-        Advert advert = advertRepository.findAdvertByUserIdAndId(user.getId(), user.getCurrentAdvert());
+        Advert advert = advertRepository.findAdvertByChatIdAndId(user.getChatId(), user.getCurrentAdvert());
         if (advert.getPrice() == null) {
             advert.setPrice(Double.valueOf(message));
             sendMessage.setText(Text.REQUEST_PRODUCT_DESCRIPTION.getText());
@@ -65,7 +66,13 @@ public class RentingOutHandler implements Handler {
     }
 
     private String buildAdvertMessage(User user, Advert advert) {
-        return Text.ADVERT_TEXT.getText(user.getUsername(), advert.getName(), advert.getPrice(), advert.getDescription());
+        return Text.ADVERT_TEXT.getText(
+                user.getUsername(),
+                advert.getName(),
+                advert.getPrice(),
+                user.getUserDistrict(),
+                advert.getDescription()
+        );
     }
 
     @Override

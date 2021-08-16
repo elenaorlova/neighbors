@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import neighbors.enums.State;
+import neighbors.enums.bot.State;
 import neighbors.entity.User;
 import neighbors.repository.UserRepository;
 
@@ -42,11 +42,7 @@ public class UpdateReceiver {
     }
 
     private User getUser(Message message, Long chatId) {
-        return userRepository.getByChatId(chatId).orElseGet(
-                () -> userRepository.save(
-                        new User(chatId, message.getFrom().getUserName(), message.getFrom().getFirstName())
-                )
-        );
+        return userRepository.getByChatId(chatId).orElseGet(() -> userRepository.save(new User(chatId, message.getFrom().getUserName())));
     }
 
     private Handler getHandlerByState(State state) {

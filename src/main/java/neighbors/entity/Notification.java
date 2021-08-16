@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity(name = "NOTIFICATION")
 @Setter
@@ -16,17 +15,13 @@ public class Notification {
     @GeneratedValue
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Column(name = "chat_id", nullable = false)
+    private Long chatId;
 
-    @Column(name = "enabled", nullable = false)
-    private Boolean enabled;
+    @Column(name = "status", nullable = false)
+    private String status;
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<NotificationDistrict> notificationDistricts;
+    @OneToOne
+    private Advert advert;
 
-    public Notification(Long userId, boolean enabled) {
-        this.userId = userId;
-        this.enabled = enabled;
-    }
 }
