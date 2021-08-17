@@ -9,6 +9,7 @@ import neighbors.enums.bot.Text;
 import neighbors.handler.Handler;
 import neighbors.repository.AdvertRepository;
 import neighbors.service.MainService;
+import neighbors.service.NotificationService;
 import neighbors.utils.TelegramUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
@@ -25,6 +26,7 @@ public class RentingOutHandler implements Handler {
 
     private final AdvertRepository advertRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
@@ -35,7 +37,7 @@ public class RentingOutHandler implements Handler {
             advert.setUsername(user.getUsername());
             advert.setAdvertType(AdvertType.RENT_OFF);
             advert.setChatId(user.getChatId());
-            advert.setName(message);
+            advert.setName(message.toLowerCase());
             advert.setDistrict(user.getUserDistrict());
             advertRepository.save(advert);
             user.setCurrentAdvert(advert.getId());
@@ -61,6 +63,7 @@ public class RentingOutHandler implements Handler {
             messages.add(sendMessage);
             messages.add(advertMessage);
             messages.addAll(MainService.createMainMenu(user));
+            messages.addAll(notificationService.sendNotification(advert, user));
         }
         return messages;
     }
@@ -70,7 +73,7 @@ public class RentingOutHandler implements Handler {
                 user.getUsername(),
                 advert.getName(),
                 advert.getPrice(),
-                user.getUserDistrict(),
+                user.getUserDistrict().getName(),
                 advert.getDescription()
         );
     }

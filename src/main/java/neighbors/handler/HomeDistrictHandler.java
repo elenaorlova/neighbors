@@ -3,6 +3,7 @@ package neighbors.handler;
 import lombok.RequiredArgsConstructor;
 import neighbors.entity.District;
 import neighbors.enums.bot.Text;
+import neighbors.repository.DistrictRepository;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -27,6 +28,7 @@ import static neighbors.utils.TelegramUtils.createMessageTemplate;
 public class HomeDistrictHandler implements Handler {
 
     private final UserRepository userRepository;
+    private final DistrictRepository districtRepository;
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
@@ -38,6 +40,7 @@ public class HomeDistrictHandler implements Handler {
             return List.of(sendMessage);
         }
         user.setState(State.DISTRICT_SELECTION);
+        districtRepository.save(user.getUserDistrict());
         userRepository.save(user);
         SendMessage sendMessage = createMessageTemplate(user);
         sendMessage.setText(Text.REQUEST_TO_ENABLE_NOTIFICATIONS.getText());

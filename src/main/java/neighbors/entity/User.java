@@ -1,5 +1,6 @@
 package neighbors.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,10 +10,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Entity(name = "BOT_USER")
+@Entity(name = "USER")
 @Setter
 @Getter
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"chatId"})
 public class User {
     @Id
     @GeneratedValue

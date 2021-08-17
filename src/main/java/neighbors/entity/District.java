@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-@Entity(name = "NOTIFICATION_DISTRICT")
+@Entity(name = "DISTRICT")
 @Setter
 @Getter
 @NoArgsConstructor
@@ -15,10 +15,10 @@ public class District {
     @GeneratedValue
     private Long id;
 
-    @Column(name = "district_name")
-    private String districtName;
+    @Column(name = "name")
+    private String name;
 
-    public District(String districtName) {
-        this.districtName = districtName;
+    public District(String name) {
+        this.name = name;
     }
 }

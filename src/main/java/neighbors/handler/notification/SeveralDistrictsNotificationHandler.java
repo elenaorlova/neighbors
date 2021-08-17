@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import neighbors.entity.District;
 import neighbors.entity.User;
 import neighbors.enums.bot.State;
-import neighbors.repository.NotificationDistrictRepository;
+import neighbors.repository.DistrictRepository;
 import neighbors.repository.UserRepository;
 import neighbors.service.MainService;
 
@@ -25,7 +25,7 @@ import static neighbors.utils.TelegramUtils.createMessageTemplate;
 public class SeveralDistrictsNotificationHandler implements Handler {
 
     private final UserRepository userRepository;
-    private final NotificationDistrictRepository notificationDistrictRepository;
+    private final DistrictRepository districtRepository;
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
@@ -38,13 +38,13 @@ public class SeveralDistrictsNotificationHandler implements Handler {
         user.setNotificationDistricts(notificationDistricts);
         sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_SEVERAL_DISTRICTS.getText(
                 notificationDistricts.stream()
-                        .map(District::getDistrictName)
+                        .map(District::getName)
                         .collect(Collectors.toList())
                         .toString()
                 )
         );
         user.setState(State.REGISTERED);
-        notificationDistrictRepository.saveAll(notificationDistricts);
+        districtRepository.saveAll(notificationDistricts);
         userRepository.save(user);
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
         messages.add(sendMessage);

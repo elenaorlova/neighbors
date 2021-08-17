@@ -6,7 +6,7 @@ import neighbors.enums.bot.Command;
 import neighbors.enums.bot.State;
 import neighbors.enums.bot.Text;
 import neighbors.handler.Handler;
-import neighbors.repository.NotificationDistrictRepository;
+import neighbors.repository.DistrictRepository;
 import neighbors.service.MainService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
@@ -25,7 +25,7 @@ import static neighbors.utils.TelegramUtils.createMessageTemplate;
 public class DefaultDistrictNotificationHandler implements Handler {
 
     private final UserRepository userRepository;
-    private final NotificationDistrictRepository notificationDistrictRepository;
+    private final DistrictRepository districtRepository;
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
@@ -46,7 +46,7 @@ public class DefaultDistrictNotificationHandler implements Handler {
                 sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_ALL_DISTRICTS.getText());
             }
             user.setNotificationDistricts(List.of(district));
-            notificationDistrictRepository.save(district);
+            districtRepository.save(district);
             messages.add(sendMessage);
             messages.addAll(MainService.createMainMenu(user));
         }
