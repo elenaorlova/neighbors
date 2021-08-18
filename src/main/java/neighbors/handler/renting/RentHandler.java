@@ -1,4 +1,4 @@
-package neighbors.handler.notification;
+package neighbors.handler.renting;
 
 import lombok.RequiredArgsConstructor;
 import neighbors.entity.Advert;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class RentingHandler implements Handler {
+public class RentHandler implements Handler {
 
     private final RentService rentService;
 

@@ -1,4 +1,4 @@
-package neighbors.handler.notification;
+package neighbors.handler.renting;
 
 import lombok.RequiredArgsConstructor;
 import neighbors.entity.Advert;
@@ -19,7 +19,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class RentingOutHandler implements Handler {
+public class RentOutHandler implements Handler {
 
     private final AdvertRepository advertRepository;
     private final BotUserRepository botUserRepository;
@@ -35,6 +35,7 @@ public class RentingOutHandler implements Handler {
         advert.setDistrict(botUser.getUserDistrict());
         advertRepository.save(advert);
         botUser.setCurrentAdvert(advert.getId());
+        botUser.setState(State.RENTING_OUT_SET_PRICE);
         botUserRepository.save(botUser);
         sendMessage.setText(Text.REQUEST_PRODUCT_PRICE.getText());
         return List.of(sendMessage);

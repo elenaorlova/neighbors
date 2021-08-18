@@ -18,7 +18,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class NotificationHandler implements Handler {
+public class SetNotificationHandler implements Handler {
 
     private final BotUserRepository botUserRepository;
 
