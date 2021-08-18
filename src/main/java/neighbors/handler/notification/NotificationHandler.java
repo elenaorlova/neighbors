@@ -5,33 +5,31 @@ import neighbors.enums.bot.Command;
 import neighbors.enums.bot.State;
 import neighbors.enums.bot.Text;
 import neighbors.handler.Handler;
-import neighbors.repository.UserRepository;
+import neighbors.repository.BotUserRepository;
 import neighbors.utils.TelegramUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import neighbors.entity.User;
+import neighbors.entity.BotUser;
 
 import java.io.Serializable;
 import java.util.List;
-
-import static neighbors.utils.TelegramUtils.createMessageTemplate;
 
 @Component
 @RequiredArgsConstructor
 public class NotificationHandler implements Handler {
 
-    private final UserRepository userRepository;
+    private final BotUserRepository botUserRepository;
 
     @Override
-    public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
-        SendMessage sendMessage = TelegramUtils.createMessageTemplate(user);
+    public List<PartialBotApiMethod<? extends Serializable>> handle(BotUser botUser, String message) {
+        SendMessage sendMessage = TelegramUtils.createMessageTemplate(botUser);
         if (Command.ENABLE_RENT_NOTIFICATIONS.equals(message)) {
             sendMessage.setText(Text.ENABLING_NOTIFICATIONS.getText());
             sendMessage.setReplyMarkup(setUpInlineKeyboardMarkup());
-            user.setSentNotifications(true);
-            userRepository.save(user);
+            botUser.setSentNotifications(true);
+            botUserRepository.save(botUser);
         } else {
             sendMessage.setText(Text.DISABLE_NOTIFICATIONS.getText());
         }

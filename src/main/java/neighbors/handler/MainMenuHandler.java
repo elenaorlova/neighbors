@@ -8,8 +8,8 @@ import neighbors.utils.TelegramUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import neighbors.entity.User;
-import neighbors.repository.UserRepository;
+import neighbors.entity.BotUser;
+import neighbors.repository.BotUserRepository;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,19 +18,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MainMenuHandler implements Handler {
 
-    private final UserRepository userRepository;
+    private final BotUserRepository botUserRepository;
 
     @Override
-    public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
-        SendMessage sendMessage = TelegramUtils.createMessageTemplate(user);
+    public List<PartialBotApiMethod<? extends Serializable>> handle(BotUser botUser, String message) {
+        SendMessage sendMessage = TelegramUtils.createMessageTemplate(botUser);
         if (Command.RENT.equals(message)) {
             sendMessage.setText(Text.REQUEST_RENTING_NAME.getText());
-            user.setState(State.RENTING);
+            botUser.setState(State.RENTING);
         } else if (Command.RENT_OUT.equals(message)) {
             sendMessage.setText(Text.REQUEST_RENTING_OUT_NAME.getText());
-            user.setState(State.RENTING_OUT);
+            botUser.setState(State.RENTING_OUT);
         }
-        userRepository.save(user);
+        botUserRepository.save(botUser);
         return List.of(sendMessage);
     }
 

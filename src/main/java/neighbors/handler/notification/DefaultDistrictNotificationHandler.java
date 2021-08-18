@@ -11,8 +11,8 @@ import neighbors.service.MainService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import neighbors.entity.User;
-import neighbors.repository.UserRepository;
+import neighbors.entity.BotUser;
+import neighbors.repository.BotUserRepository;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -24,33 +24,33 @@ import static neighbors.utils.TelegramUtils.createMessageTemplate;
 @RequiredArgsConstructor
 public class DefaultDistrictNotificationHandler implements Handler {
 
-    private final UserRepository userRepository;
+    private final BotUserRepository botUserRepository;
     private final DistrictRepository districtRepository;
 
     @Override
-    public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
-        SendMessage sendMessage = createMessageTemplate(user);
+    public List<PartialBotApiMethod<? extends Serializable>> handle(BotUser botUser, String message) {
+        SendMessage sendMessage = createMessageTemplate(botUser);
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
-        user.setState(State.REGISTERED);
+        botUser.setState(State.REGISTERED);
         if (Command.SEVERAL_DISTRICTS_NOTIFICATIONS.equals(message)) {
             sendMessage.setText(Text.SELECTING_SEVERAL_AREAS_FOR_NOTIFICATIONS.getText());
-            user.setState(State.NOTIFICATION_DISTRICT_SELECTION);
+            botUser.setState(State.NOTIFICATION_DISTRICT_SELECTION);
             messages.add(sendMessage);
         } else {
             District district;
             if (Command.USER_DISTRICT_NOTIFICATIONS.equals(message)) {
-                district = user.getUserDistrict();
+                district = botUser.getUserDistrict();
                 sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_USER_DISTRICT.getText());
             }  else {
                 district = new District("all");
                 sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_ALL_DISTRICTS.getText());
             }
-            user.setNotificationDistricts(List.of(district));
+            botUser.setNotificationDistricts(List.of(district));
             districtRepository.save(district);
             messages.add(sendMessage);
-            messages.addAll(MainService.createMainMenu(user));
+            messages.addAll(MainService.createMainMenu(botUser));
         }
-        userRepository.save(user);
+        botUserRepository.save(botUser);
         return messages;
     }
 

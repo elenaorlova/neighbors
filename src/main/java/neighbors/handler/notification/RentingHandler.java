@@ -10,7 +10,7 @@ import neighbors.utils.TelegramUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import neighbors.entity.User;
+import neighbors.entity.BotUser;
 import neighbors.service.RentService;
 
 import java.io.Serializable;
@@ -25,22 +25,21 @@ public class RentingHandler implements Handler {
     private final RentService rentService;
 
     @Override
-    public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
+    public List<PartialBotApiMethod<? extends Serializable>> handle(BotUser botUser, String message) {
         List<Advert> adverts = rentService.findAllObjectsByName(message);
-        SendMessage sendMessage = TelegramUtils.createMessageTemplate(user);
+        SendMessage sendMessage = TelegramUtils.createMessageTemplate(botUser);
         if (adverts.isEmpty()) {
             sendMessage.setText(Text.NOT_FOUND_ADVERTS.getText(message));
         } else {
             sendMessage.setText(Text.ADVERTS_FOUND.getText(
                     adverts.stream()
                             .map(Advert::getFullDescription)
-                            .collect(Collectors.toList()).toString()
-                    )
+                            .collect(Collectors.toList()).toString())
             );
         }
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
         messages.add(sendMessage);
-        messages.addAll(MainService.createMainMenu(user));
+        messages.addAll(MainService.createMainMenu(botUser));
         return messages;
     }
 

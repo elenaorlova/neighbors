@@ -6,8 +6,8 @@ import neighbors.enums.bot.Text;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import neighbors.entity.User;
-import neighbors.repository.UserRepository;
+import neighbors.entity.BotUser;
+import neighbors.repository.BotUserRepository;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -19,16 +19,16 @@ import static neighbors.utils.TelegramUtils.createMessageTemplate;
 @RequiredArgsConstructor
 public class StartHandler implements Handler {
 
-    private final UserRepository userRepository;
+    private final BotUserRepository botUserRepository;
 
     @Override
-    public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
-        SendMessage welcomeMessage = createMessageTemplate(user);
+    public List<PartialBotApiMethod<? extends Serializable>> handle(BotUser botUser, String message) {
+        SendMessage welcomeMessage = createMessageTemplate(botUser);
         welcomeMessage.setText(Text.WELCOME_MESSAGE.getText());
-        SendMessage districtMessage = createMessageTemplate(user);
+        SendMessage districtMessage = createMessageTemplate(botUser);
         districtMessage.setText(Text.SELECT_USER_DISTRICT.getText());
-        user.setState(State.REGISTRATION);
-        userRepository.save(user);
+        botUser.setState(State.REGISTRATION);
+        botUserRepository.save(botUser);
         return List.of(welcomeMessage, districtMessage);
     }
 

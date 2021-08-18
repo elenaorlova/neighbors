@@ -12,8 +12,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import neighbors.enums.bot.Command;
 import neighbors.enums.DistrictEnum;
 import neighbors.enums.bot.State;
-import neighbors.entity.User;
-import neighbors.repository.UserRepository;
+import neighbors.entity.BotUser;
+import neighbors.repository.BotUserRepository;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -27,22 +27,22 @@ import static neighbors.utils.TelegramUtils.createMessageTemplate;
 @RequiredArgsConstructor
 public class HomeDistrictHandler implements Handler {
 
-    private final UserRepository userRepository;
+    private final BotUserRepository botUserRepository;
     private final DistrictRepository districtRepository;
 
     @Override
-    public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
+    public List<PartialBotApiMethod<? extends Serializable>> handle(BotUser botUser, String message) {
         if (checkDistrict(message)) {
-            user.setUserDistrict(new District(message.toLowerCase()));
+            botUser.setUserDistrict(new District(message.toLowerCase()));
         } else {
-            SendMessage sendMessage = createMessageTemplate(user);
+            SendMessage sendMessage = createMessageTemplate(botUser);
             sendMessage.setText(Text.DISTRICT_NOT_FOUND.getText(getSimilarDistricts(message)));
             return List.of(sendMessage);
         }
-        user.setState(State.DISTRICT_SELECTION);
-        districtRepository.save(user.getUserDistrict());
-        userRepository.save(user);
-        SendMessage sendMessage = createMessageTemplate(user);
+        botUser.setState(State.DISTRICT_SELECTION);
+        districtRepository.save(botUser.getUserDistrict());
+        botUserRepository.save(botUser);
+        SendMessage sendMessage = createMessageTemplate(botUser);
         sendMessage.setText(Text.REQUEST_TO_ENABLE_NOTIFICATIONS.getText());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<InlineKeyboardButton> inlineKeyboardButtons = List.of(

@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import neighbors.entity.District;
-import neighbors.entity.User;
+import neighbors.entity.BotUser;
 import neighbors.enums.bot.State;
 import neighbors.repository.DistrictRepository;
-import neighbors.repository.UserRepository;
+import neighbors.repository.BotUserRepository;
 import neighbors.service.MainService;
 
 import java.io.Serializable;
@@ -24,18 +24,18 @@ import static neighbors.utils.TelegramUtils.createMessageTemplate;
 @RequiredArgsConstructor
 public class SeveralDistrictsNotificationHandler implements Handler {
 
-    private final UserRepository userRepository;
+    private final BotUserRepository botUserRepository;
     private final DistrictRepository districtRepository;
 
     @Override
-    public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
-        SendMessage sendMessage = createMessageTemplate(user);
-        String[] districtNames = message.split(",");
+    public List<PartialBotApiMethod<? extends Serializable>> handle(BotUser botUser, String message) {
+        SendMessage sendMessage = createMessageTemplate(botUser);
+        String[] districtNames = message.replace(" ", "").split(",");
         List<District> notificationDistricts = new ArrayList<>();
         for (String districtName: districtNames) {
             notificationDistricts.add(new District(districtName));
         }
-        user.setNotificationDistricts(notificationDistricts);
+        botUser.setNotificationDistricts(notificationDistricts);
         sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_SEVERAL_DISTRICTS.getText(
                 notificationDistricts.stream()
                         .map(District::getName)
@@ -43,12 +43,12 @@ public class SeveralDistrictsNotificationHandler implements Handler {
                         .toString()
                 )
         );
-        user.setState(State.REGISTERED);
+        botUser.setState(State.REGISTERED);
         districtRepository.saveAll(notificationDistricts);
-        userRepository.save(user);
+        botUserRepository.save(botUser);
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
         messages.add(sendMessage);
-        messages.addAll(MainService.createMainMenu(user));
+        messages.addAll(MainService.createMainMenu(botUser));
         return messages;
     }
 
