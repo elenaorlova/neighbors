@@ -1,46 +1,44 @@
-package neighbors.handler;
+package neighbors.handler.renting;
 
 import lombok.RequiredArgsConstructor;
-import neighbors.enums.MainCommand;
+import neighbors.entity.BotUser;
 import neighbors.enums.bot.State;
 import neighbors.enums.bot.Text;
+import neighbors.handler.Handler;
+import neighbors.repository.BotUserRepository;
+import neighbors.service.AdvertService;
 import neighbors.utils.TelegramUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import neighbors.entity.BotUser;
-import neighbors.repository.BotUserRepository;
 
 import java.io.Serializable;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class MainMenuHandler implements Handler {
+public class RentSetPriceHandler implements Handler {
 
     private final BotUserRepository botUserRepository;
+    private final AdvertService advertService;
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(BotUser botUser, String message) {
         SendMessage sendMessage = TelegramUtils.createMessageTemplate(botUser);
-        if (MainCommand.RENT.equals(message)) {
-            sendMessage.setText(Text.REQUEST_RENTING_NAME.getText());
-            botUser.setState(State.ASK_ABOUT_RENTING);
-        } else if (MainCommand.RENT_OUT.equals(message)) {
-            sendMessage.setText(Text.REQUEST_RENTING_OUT_NAME.getText());
-            botUser.setState(State.RENTING_OUT);
-        }
+        advertService.setAdvertPrice(botUser, message);
+        sendMessage.setText(Text.REQUEST_PRODUCT_DESCRIPTION.getText());
+        botUser.setState(State.RENTING_SET_DESCRIPTION);
         botUserRepository.save(botUser);
         return List.of(sendMessage);
     }
 
     @Override
     public List<State> operatedBotState() {
-        return null;
+        return List.of(State.RENTING_SET_PRICE);
     }
 
     @Override
     public List<String> operatedCallBackQuery() {
-        return List.of(MainCommand.RENT, MainCommand.RENT_OUT);
+        return null;
     }
 }

@@ -1,12 +1,12 @@
 package neighbors.service;
 
+import neighbors.enums.MainCommand;
 import neighbors.enums.bot.Text;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import neighbors.entity.BotUser;
-import neighbors.enums.bot.Command;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,11 +15,11 @@ import static neighbors.utils.TelegramUtils.createButton;
 import static neighbors.utils.TelegramUtils.createMessageTemplate;
 
 @Service
-public class MainService {
+public class MenuService {
 
-    public static List<PartialBotApiMethod<? extends Serializable>> createMainMenu(BotUser botUser) {
+    public static List<PartialBotApiMethod<? extends Serializable>> createMenu(BotUser botUser, String message) {
         SendMessage sendMessage = createMessageTemplate(botUser);
-        sendMessage.setText(Text.MAIN_MENU.getText());
+        sendMessage.setText(message);
         sendMessage.setReplyMarkup(setUpInlineKeyboardMarkup());
         return List.of(sendMessage);
     }
@@ -27,9 +27,10 @@ public class MainService {
     private static InlineKeyboardMarkup setUpInlineKeyboardMarkup() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(List.of(
-                List.of(
-                        createButton(Text.BUTTON_RENT.getText(), Command.RENT_OUT),
-                        createButton(Text.BUTTON_RENT_OFF.getText(), Command.RENT))
+                List.of(createButton(Text.BUTTON_RENT.getText(), MainCommand.RENT_OUT), createButton(Text.BUTTON_RENT_OFF.getText(), MainCommand.RENT)),
+                List.of(createButton("Посмотреть мои объявления", MainCommand.GET_MY_ADVERTS)),
+                List.of(createButton("Посмотреть все объявления о сдаче", MainCommand.GET_RENT_OUT_ADVERTS)),
+                List.of(createButton("Посмотреть все объявления о съеме", MainCommand.GET_RENT_ADVERTS))
         ));
         return inlineKeyboardMarkup;
     }

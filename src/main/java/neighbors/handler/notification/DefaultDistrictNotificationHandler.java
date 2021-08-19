@@ -2,12 +2,12 @@ package neighbors.handler.notification;
 
 import lombok.RequiredArgsConstructor;
 import neighbors.entity.District;
-import neighbors.enums.bot.Command;
+import neighbors.enums.NotificationCommand;
 import neighbors.enums.bot.State;
 import neighbors.enums.bot.Text;
 import neighbors.handler.Handler;
 import neighbors.repository.DistrictRepository;
-import neighbors.service.MainService;
+import neighbors.service.MenuService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -32,13 +32,13 @@ public class DefaultDistrictNotificationHandler implements Handler {
         SendMessage sendMessage = createMessageTemplate(botUser);
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
         botUser.setState(State.REGISTERED);
-        if (Command.SEVERAL_DISTRICTS_NOTIFICATIONS.equals(message)) {
+        if (NotificationCommand.SEVERAL_DISTRICTS_NOTIFICATIONS.equals(message)) {
             sendMessage.setText(Text.SELECTING_SEVERAL_AREAS_FOR_NOTIFICATIONS.getText());
             botUser.setState(State.NOTIFICATION_DISTRICT_SELECTION);
             messages.add(sendMessage);
         } else {
             District district;
-            if (Command.USER_DISTRICT_NOTIFICATIONS.equals(message)) {
+            if (NotificationCommand.USER_DISTRICT_NOTIFICATIONS.equals(message)) {
                 district = botUser.getUserDistrict();
                 sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_USER_DISTRICT.getText());
             }  else {
@@ -48,7 +48,7 @@ public class DefaultDistrictNotificationHandler implements Handler {
             botUser.setNotificationDistricts(List.of(district));
             districtRepository.save(district);
             messages.add(sendMessage);
-            messages.addAll(MainService.createMainMenu(botUser));
+            messages.addAll(MenuService.createMenu(botUser, Text.MAIN_MENU.getText()));
         }
         botUserRepository.save(botUser);
         return messages;
@@ -62,9 +62,9 @@ public class DefaultDistrictNotificationHandler implements Handler {
     @Override
     public List<String> operatedCallBackQuery() {
         return List.of(
-                Command.USER_DISTRICT_NOTIFICATIONS,
-                Command.SEVERAL_DISTRICTS_NOTIFICATIONS,
-                Command.ALL_DISTRICTS_NOTIFICATIONS
+                NotificationCommand.USER_DISTRICT_NOTIFICATIONS,
+                NotificationCommand.SEVERAL_DISTRICTS_NOTIFICATIONS,
+                NotificationCommand.ALL_DISTRICTS_NOTIFICATIONS
         );
     }
 }

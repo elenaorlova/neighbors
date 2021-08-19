@@ -2,5 +2,5 @@ package neighbors.enums;
 
 public enum AdvertType {
     RENT,
-    RENT_OFF
+    RENT_OUT
 }

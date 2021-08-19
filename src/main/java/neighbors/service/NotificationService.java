@@ -19,7 +19,7 @@ public class NotificationService {
 
     private final BotUserRepository botUserRepository;
 
-    public List<PartialBotApiMethod<? extends Serializable>> sendNotification(Advert advert, BotUser currentBotUser) {
+    public List<PartialBotApiMethod<? extends Serializable>> createNotificationMessage(Advert advert, BotUser currentBotUser) {
         List<BotUser> botUsers = botUserRepository.findAllBySentNotificationsAndNotificationDistrictsContains(true, advert.getDistrict().getName());
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
         botUsers.remove(currentBotUser);

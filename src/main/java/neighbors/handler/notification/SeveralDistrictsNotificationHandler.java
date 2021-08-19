@@ -11,7 +11,7 @@ import neighbors.entity.BotUser;
 import neighbors.enums.bot.State;
 import neighbors.repository.DistrictRepository;
 import neighbors.repository.BotUserRepository;
-import neighbors.service.MainService;
+import neighbors.service.MenuService;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class SeveralDistrictsNotificationHandler implements Handler {
         botUserRepository.save(botUser);
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
         messages.add(sendMessage);
-        messages.addAll(MainService.createMainMenu(botUser));
+        messages.addAll(MenuService.createMenu(botUser, Text.MAIN_MENU.getText()));
         return messages;
     }
 

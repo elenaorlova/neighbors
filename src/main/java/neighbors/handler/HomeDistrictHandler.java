@@ -2,6 +2,7 @@ package neighbors.handler;
 
 import lombok.RequiredArgsConstructor;
 import neighbors.entity.District;
+import neighbors.enums.NotificationCommand;
 import neighbors.enums.bot.Text;
 import neighbors.repository.DistrictRepository;
 import org.springframework.stereotype.Component;
@@ -9,7 +10,6 @@ import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import neighbors.enums.bot.Command;
 import neighbors.enums.DistrictEnum;
 import neighbors.enums.bot.State;
 import neighbors.entity.BotUser;
@@ -46,8 +46,8 @@ public class HomeDistrictHandler implements Handler {
         sendMessage.setText(Text.REQUEST_TO_ENABLE_NOTIFICATIONS.getText());
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<InlineKeyboardButton> inlineKeyboardButtons = List.of(
-                createButton(Text.USER_ENABLE_NOTIFICATIONS.getText(), Command.ENABLE_RENT_NOTIFICATIONS),
-                createButton(Text.USER_DISABLE_NOTIFICATIONS.getText(), Command.DISABLE_RENT_NOTIFICATIONS)
+                createButton(Text.USER_ENABLE_NOTIFICATIONS.getText(), NotificationCommand.ENABLE_RENT_NOTIFICATIONS),
+                createButton(Text.USER_DISABLE_NOTIFICATIONS.getText(), NotificationCommand.DISABLE_RENT_NOTIFICATIONS)
         );
         inlineKeyboardMarkup.setKeyboard(List.of(inlineKeyboardButtons));
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);
