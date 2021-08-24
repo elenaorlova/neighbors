@@ -27,7 +27,7 @@ public class MenuService {
     private static InlineKeyboardMarkup setUpInlineKeyboardMarkup() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(List.of(
-                List.of(createButton(Text.BUTTON_RENT.getText(), MainCommand.RENT), createButton(Text.BUTTON_RENT_OUT.getText(), MainCommand.RENT_OUT)),
+                List.of(createButton(Text.BUTTON_RENT, MainCommand.RENT), createButton(Text.BUTTON_RENT_OUT, MainCommand.RENT_OUT)),
                 List.of(createButton("Посмотреть мои объявления", MainCommand.GET_MY_ADVERTS)),
                 List.of(createButton("Посмотреть все объявления о сдаче", MainCommand.GET_RENT_OUT_ADVERTS)),
                 List.of(createButton("Посмотреть все объявления о съеме", MainCommand.GET_RENT_ADVERTS))

@@ -20,7 +20,7 @@ public class RentOutSetDescriptionHandler implements Handler {
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
-        return advertService.setDescription(user, message, Text.CONFIRM_ADVERT.getText());
+        return advertService.setDescription(user, message, Text.CONFIRM_ADVERT);
     }
 
     @Override

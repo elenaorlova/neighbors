@@ -36,7 +36,7 @@ public class AdvertService {
         advertMessage.setText(advert.getFullDescription());
         messages.add(sendMessage);
         messages.add(advertMessage);
-        messages.addAll(MenuService.createMenu(user, Text.MAIN_MENU.getText()));
+        messages.addAll(MenuService.createMenu(user, Text.MAIN_MENU));
         return messages;
     }
 
@@ -78,7 +78,7 @@ public class AdvertService {
     }
 
     private String buildAdvertMessage(User user, Advert advert) {
-        return Text.ADVERT_TEXT.getText(
+        return String.format(Text.ADVERT_TEXT,
                 user.getUsername(),
                 advert.getName(),
                 advert.getPrice(),

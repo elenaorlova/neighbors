@@ -36,7 +36,7 @@ public class InitRentHandler implements Handler {
         List<Advert> adverts = rentService.findAllObjectsByName(message);
         SendMessage sendMessage = TelegramUtils.createMessageTemplate(user);
         if (adverts.isEmpty()) {
-            sendMessage.setText(Text.NOT_FOUND_ADVERTS.getText(message));
+            sendMessage.setText(String.format(Text.NOT_FOUND_ADVERTS, message));
             user.setState(State.RENTING);
             userRepository.save(user);
             InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
@@ -48,13 +48,11 @@ public class InitRentHandler implements Handler {
             sendMessage.setReplyMarkup(inlineKeyboardMarkup);
             messages.add(sendMessage);
         } else {
-            sendMessage.setText(Text.ADVERTS_FOUND.getText(
-                    adverts.stream()
+            sendMessage.setText(String.format(Text.ADVERTS_FOUND, adverts.stream()
                             .map(Advert::getFullDescription)
-                            .collect(Collectors.toList()).toString())
-            );
+                            .collect(Collectors.toList())));
             messages.add(sendMessage);
-            messages.addAll(MenuService.createMenu(user, Text.MAIN_MENU.getText()));
+            messages.addAll(MenuService.createMenu(user, Text.MAIN_MENU));
         }
         return messages;
     }

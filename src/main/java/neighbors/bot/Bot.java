@@ -53,7 +53,7 @@ public class Bot extends TelegramLongPollingBot {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            log.error("Error when sending message: {}, {}", sendMessage.getText(), e.getMessage());
+            log.error("Error when sending message: {}, {}", sendMessage, e.getMessage());
         }
     }
 }

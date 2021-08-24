@@ -36,13 +36,13 @@ public class MenuHandler implements Handler {
             sendMessage.setReplyMarkup(setUpInlineKeyboardMarkup());
             user.setState(State.RENTING_OUT_SELECT_CATEGORY);
         } else if (MainCommand.GET_MY_ADVERTS.equals(message)) {
-            sendMessage.setText(Text.REQUEST_RENTING_OUT_NAME.getText());
+            sendMessage.setText(Text.REQUEST_RENTING_OUT_NAME);
             user.setState(State.GET_MY_ADVERTS);
         } else if (MainCommand.GET_RENT_OUT_ADVERTS.equals(message)) {
-            sendMessage.setText(Text.REQUEST_RENTING_OUT_NAME.getText());
+            sendMessage.setText(Text.REQUEST_RENTING_OUT_NAME);
             user.setState(State.GET_RENT_OUT_ADVERTS);
         } else if (MainCommand.GET_RENT_ADVERTS.equals(message)) {
-            sendMessage.setText(Text.REQUEST_RENTING_OUT_NAME.getText());
+            sendMessage.setText(Text.REQUEST_RENTING_OUT_NAME);
             user.setState(State.GET_RENT_ADVERTS);
         }
         userRepository.save(user);

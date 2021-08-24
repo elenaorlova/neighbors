@@ -29,15 +29,15 @@ public class SetNotificationHandler implements Handler {
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
         SendMessage sendMessage = TelegramUtils.createMessageTemplate(user);
         if (NotificationCommand.ENABLE_RENT_NOTIFICATIONS.equals(message)) {
-            sendMessage.setText(Text.ENABLING_NOTIFICATIONS.getText());
+            sendMessage.setText(Text.ENABLING_NOTIFICATIONS);
             sendMessage.setReplyMarkup(setUpInlineKeyboardMarkup());
             user.setSentNotifications(true);
             messages.add(sendMessage);
         } else {
-            sendMessage.setText(Text.DISABLE_NOTIFICATIONS.getText());
+            sendMessage.setText(Text.DISABLE_NOTIFICATIONS);
             user.setState(State.REGISTERED);
             messages.add(sendMessage);
-            messages.addAll(MenuService.createMenu(user, Text.MAIN_MENU.getText()));
+            messages.addAll(MenuService.createMenu(user, Text.MAIN_MENU));
         }
         userRepository.save(user);
         return messages;
@@ -46,9 +46,9 @@ public class SetNotificationHandler implements Handler {
     private InlineKeyboardMarkup setUpInlineKeyboardMarkup() {
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         inlineKeyboardMarkup.setKeyboard(List.of(
-                List.of(TelegramUtils.createButton(Text.BUTTON_ONLY_MY_DISTRICT.getText(), NotificationCommand.USER_DISTRICT_NOTIFICATIONS)),
-                List.of(TelegramUtils.createButton(Text.BUTTON_SEVERAL_DISTRICTS.getText(), NotificationCommand.SEVERAL_DISTRICTS_NOTIFICATIONS)),
-                List.of(TelegramUtils.createButton(Text.BUTTON_ALL_DISTRICTS.getText(), NotificationCommand.ALL_DISTRICTS_NOTIFICATIONS))
+                List.of(TelegramUtils.createButton(Text.BUTTON_ONLY_MY_DISTRICT, NotificationCommand.USER_DISTRICT_NOTIFICATIONS)),
+                List.of(TelegramUtils.createButton(Text.BUTTON_SEVERAL_DISTRICTS, NotificationCommand.SEVERAL_DISTRICTS_NOTIFICATIONS)),
+                List.of(TelegramUtils.createButton(Text.BUTTON_ALL_DISTRICTS, NotificationCommand.ALL_DISTRICTS_NOTIFICATIONS))
         ));
         return inlineKeyboardMarkup;
     }

@@ -36,18 +36,18 @@ public class HomeDistrictHandler implements Handler {
             user.setUserDistrict(new District(message.toLowerCase()));
         } else {
             SendMessage sendMessage = createMessageTemplate(user);
-            sendMessage.setText(Text.DISTRICT_NOT_FOUND.getText(getSimilarDistricts(message)));
+            sendMessage.setText(String.format(Text.DISTRICT_NOT_FOUND, getSimilarDistricts(message)));
             return List.of(sendMessage);
         }
         user.setState(State.DISTRICT_SELECTION);
         districtRepository.save(user.getUserDistrict());
         userRepository.save(user);
         SendMessage sendMessage = createMessageTemplate(user);
-        sendMessage.setText(Text.REQUEST_TO_ENABLE_NOTIFICATIONS.getText());
+        sendMessage.setText(Text.REQUEST_TO_ENABLE_NOTIFICATIONS);
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<InlineKeyboardButton> inlineKeyboardButtons = List.of(
-                createButton(Text.USER_ENABLE_NOTIFICATIONS.getText(), NotificationCommand.ENABLE_RENT_NOTIFICATIONS),
-                createButton(Text.USER_DISABLE_NOTIFICATIONS.getText(), NotificationCommand.DISABLE_RENT_NOTIFICATIONS)
+                createButton(Text.USER_ENABLE_NOTIFICATIONS, NotificationCommand.ENABLE_RENT_NOTIFICATIONS),
+                createButton(Text.USER_DISABLE_NOTIFICATIONS, NotificationCommand.DISABLE_RENT_NOTIFICATIONS)
         );
         inlineKeyboardMarkup.setKeyboard(List.of(inlineKeyboardButtons));
         sendMessage.setReplyMarkup(inlineKeyboardMarkup);

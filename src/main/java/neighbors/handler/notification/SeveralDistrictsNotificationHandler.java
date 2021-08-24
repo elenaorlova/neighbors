@@ -36,19 +36,15 @@ public class SeveralDistrictsNotificationHandler implements Handler {
             notificationDistricts.add(new District(districtName));
         }
         user.setNotificationDistricts(notificationDistricts);
-        sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_SEVERAL_DISTRICTS.getText(
-                notificationDistricts.stream()
+        sendMessage.setText(String.format(Text.NOTIFICATIONS_TURN_ON_IN_SEVERAL_DISTRICTS, notificationDistricts.stream()
                         .map(District::getName)
-                        .collect(Collectors.toList())
-                        .toString()
-                )
-        );
+                        .collect(Collectors.toList())));
         user.setState(State.REGISTERED);
         districtRepository.saveAll(notificationDistricts);
         userRepository.save(user);
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
         messages.add(sendMessage);
-        messages.addAll(MenuService.createMenu(user, Text.MAIN_MENU.getText()));
+        messages.addAll(MenuService.createMenu(user, Text.MAIN_MENU));
         return messages;
     }
 

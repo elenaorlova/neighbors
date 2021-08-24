@@ -26,7 +26,7 @@ public class RentOutSetPriceHandler implements Handler {
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
         SendMessage sendMessage = TelegramUtils.createMessageTemplate(user);
         advertService.setAdvertPrice(user, message);
-        sendMessage.setText(Text.REQUEST_PRODUCT_DESCRIPTION.getText());
+        sendMessage.setText(Text.REQUEST_PRODUCT_DESCRIPTION);
         user.setState(State.RENTING_OUT_SET_DESCRIPTION);
         userRepository.save(user);
         return List.of(sendMessage);

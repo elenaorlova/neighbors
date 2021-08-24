@@ -32,7 +32,7 @@ public class RentSetCategoryHandler implements Handler {
         user.setCurrentAdvert(advert.getId());
         userRepository.save(user);
         advertService.setAdvertCategory(advert, message);
-        sendMessage.setText(Text.REQUEST_RENTING_OUT_NAME.getText());
+        sendMessage.setText(Text.REQUEST_RENTING_OUT_NAME);
         user.setState(State.RENTING_SET_NAME);
         userRepository.save(user);
         return List.of(sendMessage);

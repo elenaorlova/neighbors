@@ -33,22 +33,22 @@ public class DefaultDistrictNotificationHandler implements Handler {
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
         user.setState(State.REGISTERED);
         if (NotificationCommand.SEVERAL_DISTRICTS_NOTIFICATIONS.equals(message)) {
-            sendMessage.setText(Text.SELECTING_SEVERAL_AREAS_FOR_NOTIFICATIONS.getText());
+            sendMessage.setText(Text.SELECTING_SEVERAL_AREAS_FOR_NOTIFICATIONS);
             user.setState(State.NOTIFICATION_DISTRICT_SELECTION);
             messages.add(sendMessage);
         } else {
             District district;
             if (NotificationCommand.USER_DISTRICT_NOTIFICATIONS.equals(message)) {
                 district = user.getUserDistrict();
-                sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_USER_DISTRICT.getText());
+                sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_USER_DISTRICT);
             }  else {
                 district = new District("all");
-                sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_ALL_DISTRICTS.getText());
+                sendMessage.setText(Text.NOTIFICATIONS_TURN_ON_IN_ALL_DISTRICTS);
             }
             user.setNotificationDistricts(List.of(district));
             districtRepository.save(district);
             messages.add(sendMessage);
-            messages.addAll(MenuService.createMenu(user, Text.MAIN_MENU.getText()));
+            messages.addAll(MenuService.createMenu(user, Text.MAIN_MENU));
         }
         userRepository.save(user);
         return messages;

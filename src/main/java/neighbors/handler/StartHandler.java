@@ -24,9 +24,9 @@ public class StartHandler implements Handler {
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
         SendMessage welcomeMessage = createMessageTemplate(user);
-        welcomeMessage.setText(Text.WELCOME_MESSAGE.getText());
+        welcomeMessage.setText(Text.WELCOME_MESSAGE);
         SendMessage districtMessage = createMessageTemplate(user);
-        districtMessage.setText(Text.SELECT_USER_DISTRICT.getText());
+        districtMessage.setText(Text.SELECT_USER_DISTRICT);
         user.setState(State.REGISTRATION);
         userRepository.save(user);
         return List.of(welcomeMessage, districtMessage);
