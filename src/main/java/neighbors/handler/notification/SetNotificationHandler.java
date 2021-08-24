@@ -5,14 +5,14 @@ import neighbors.enums.NotificationCommand;
 import neighbors.enums.bot.State;
 import neighbors.enums.bot.Text;
 import neighbors.handler.Handler;
-import neighbors.repository.BotUserRepository;
+import neighbors.repository.UserRepository;
 import neighbors.service.MenuService;
 import neighbors.utils.TelegramUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import neighbors.entity.BotUser;
+import neighbors.entity.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -22,24 +22,24 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SetNotificationHandler implements Handler {
 
-    private final BotUserRepository botUserRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public List<PartialBotApiMethod<? extends Serializable>> handle(BotUser botUser, String message) {
+    public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
-        SendMessage sendMessage = TelegramUtils.createMessageTemplate(botUser);
+        SendMessage sendMessage = TelegramUtils.createMessageTemplate(user);
         if (NotificationCommand.ENABLE_RENT_NOTIFICATIONS.equals(message)) {
             sendMessage.setText(Text.ENABLING_NOTIFICATIONS.getText());
             sendMessage.setReplyMarkup(setUpInlineKeyboardMarkup());
-            botUser.setSentNotifications(true);
+            user.setSentNotifications(true);
             messages.add(sendMessage);
         } else {
             sendMessage.setText(Text.DISABLE_NOTIFICATIONS.getText());
-            botUser.setState(State.REGISTERED);
+            user.setState(State.REGISTERED);
             messages.add(sendMessage);
-            messages.addAll(MenuService.createMenu(botUser, Text.MAIN_MENU.getText()));
+            messages.addAll(MenuService.createMenu(user, Text.MAIN_MENU.getText()));
         }
-        botUserRepository.save(botUser);
+        userRepository.save(user);
         return messages;
     }
 

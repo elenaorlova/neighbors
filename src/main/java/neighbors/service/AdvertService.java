@@ -2,12 +2,12 @@ package neighbors.service;
 
 import lombok.RequiredArgsConstructor;
 import neighbors.entity.Advert;
-import neighbors.entity.BotUser;
+import neighbors.entity.User;
 import neighbors.enums.AdvertType;
 import neighbors.enums.bot.State;
 import neighbors.enums.bot.Text;
 import neighbors.repository.AdvertRepository;
-import neighbors.repository.BotUserRepository;
+import neighbors.repository.UserRepository;
 import neighbors.utils.TelegramUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
@@ -22,56 +22,67 @@ import java.util.List;
 public class AdvertService {
 
     private final AdvertRepository advertRepository;
-    private final BotUserRepository botUserRepository;
-    private final NotificationService notificationService;
+    private final UserRepository userRepository;
 
-    public List<PartialBotApiMethod<? extends Serializable>> setDescription(BotUser botUser, String description,  String message) {
+    public List<PartialBotApiMethod<? extends Serializable>> setDescription(User user, String description, String message) {
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
-        SendMessage sendMessage = TelegramUtils.createMessageTemplate(botUser);
-        Advert advert = setAdvertDescription(botUser, description);
-        botUser.setState(State.REGISTERED);
-        botUserRepository.save(botUser);
+        SendMessage sendMessage = TelegramUtils.createMessageTemplate(user);
+        Advert advert = getAdvertByUser(user);
+        setAdvertDescription(advert, user, description);
+        user.setState(State.REGISTERED);
+        userRepository.save(user);
         sendMessage.setText(message);
-        SendMessage advertMessage = TelegramUtils.createMessageTemplate(botUser);
+        SendMessage advertMessage = TelegramUtils.createMessageTemplate(user);
         advertMessage.setText(advert.getFullDescription());
         messages.add(sendMessage);
         messages.add(advertMessage);
-        messages.addAll(MenuService.createMenu(botUser, Text.MAIN_MENU.getText()));
-        messages.addAll(notificationService.createNotificationMessage(advert, botUser));
+        messages.addAll(MenuService.createMenu(user, Text.MAIN_MENU.getText()));
         return messages;
     }
 
-    public Advert setAdvertDescription(BotUser botUser, String message) {
-        Advert advert = advertRepository.findAdvertByChatIdAndId(botUser.getChatId(), botUser.getCurrentAdvert());
-        advert.setDescription(message);
-        advert.setFullDescription(buildAdvertMessage(botUser, advert));
-        advertRepository.save(advert);
-        return advert;
+    public Advert getAdvertByUser(User user) {
+        return advertRepository.findAdvertByChatIdAndId(user.getChatId(), user.getCurrentAdvert());
     }
 
-    public void setAdvertPrice(BotUser botUser, String message) {
-        Advert advert = advertRepository.findAdvertByChatIdAndId(botUser.getChatId(), botUser.getCurrentAdvert());
+    public void setAdvertDescription(Advert advert, User user, String message) {
+        advert.setDescription(message);
+        advert.setFullDescription(buildAdvertMessage(user, advert));
+        advertRepository.save(advert);
+    }
+
+    public void setAdvertName(User user, String name) {
+        Advert advert = getAdvertByUser(user);
+        advert.setName(name);
+        advertRepository.save(advert);
+    }
+
+    public void setAdvertCategory(Advert advert, String category) {
+        advert.setCategory(category.substring(1));
+        advertRepository.save(advert);
+    }
+
+    public void setAdvertPrice(User user, String message) {
+        Advert advert = advertRepository.findAdvertByChatIdAndId(user.getChatId(), user.getCurrentAdvert());
         advert.setPrice(Double.valueOf(message));
         advertRepository.save(advert);
     }
 
-    public Advert saveAdvert(BotUser botUser, String message, AdvertType advertType) {
+    public Advert saveAdvert(User user, AdvertType advertType) {
         Advert advert = new Advert();
-        advert.setUsername(botUser.getUsername());
+        advert.setUsername(user.getUsername());
         advert.setAdvertType(advertType);
-        advert.setChatId(botUser.getChatId());
-        advert.setName(message.toLowerCase());
-        advert.setDistrict(botUser.getUserDistrict());
+        advert.setChatId(user.getChatId());
+        advert.setDistrict(user.getUserDistrict());
         advertRepository.save(advert);
         return advert;
     }
 
-    private String buildAdvertMessage(BotUser botUser, Advert advert) {
+    private String buildAdvertMessage(User user, Advert advert) {
         return Text.ADVERT_TEXT.getText(
-                botUser.getUsername(),
+                user.getUsername(),
                 advert.getName(),
                 advert.getPrice(),
-                botUser.getUserDistrict().getName(),
+                user.getUserDistrict().getName(),
                 advert.getDescription()
         );
     }

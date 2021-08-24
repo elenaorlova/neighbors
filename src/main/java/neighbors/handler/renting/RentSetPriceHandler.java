@@ -1,11 +1,11 @@
 package neighbors.handler.renting;
 
 import lombok.RequiredArgsConstructor;
-import neighbors.entity.BotUser;
+import neighbors.entity.User;
 import neighbors.enums.bot.State;
 import neighbors.enums.bot.Text;
 import neighbors.handler.Handler;
-import neighbors.repository.BotUserRepository;
+import neighbors.repository.UserRepository;
 import neighbors.service.AdvertService;
 import neighbors.utils.TelegramUtils;
 import org.springframework.stereotype.Component;
@@ -19,16 +19,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RentSetPriceHandler implements Handler {
 
-    private final BotUserRepository botUserRepository;
+    private final UserRepository userRepository;
     private final AdvertService advertService;
 
     @Override
-    public List<PartialBotApiMethod<? extends Serializable>> handle(BotUser botUser, String message) {
-        SendMessage sendMessage = TelegramUtils.createMessageTemplate(botUser);
-        advertService.setAdvertPrice(botUser, message);
+    public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
+        SendMessage sendMessage = TelegramUtils.createMessageTemplate(user);
+        advertService.setAdvertPrice(user, message);
         sendMessage.setText(Text.REQUEST_PRODUCT_DESCRIPTION.getText());
-        botUser.setState(State.RENTING_SET_DESCRIPTION);
-        botUserRepository.save(botUser);
+        user.setState(State.RENTING_SET_DESCRIPTION);
+        userRepository.save(user);
         return List.of(sendMessage);
     }
 

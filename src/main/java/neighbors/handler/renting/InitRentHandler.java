@@ -6,13 +6,13 @@ import neighbors.enums.RentCommand;
 import neighbors.enums.bot.State;
 import neighbors.enums.bot.Text;
 import neighbors.handler.Handler;
-import neighbors.repository.BotUserRepository;
+import neighbors.repository.UserRepository;
 import neighbors.service.MenuService;
 import neighbors.utils.TelegramUtils;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import neighbors.entity.BotUser;
+import neighbors.entity.User;
 import neighbors.service.RentService;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
@@ -28,17 +28,17 @@ import static neighbors.utils.TelegramUtils.createButton;
 public class InitRentHandler implements Handler {
 
     private final RentService rentService;
-    private final BotUserRepository botUserRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public List<PartialBotApiMethod<? extends Serializable>> handle(BotUser botUser, String message) {
+    public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
         List<Advert> adverts = rentService.findAllObjectsByName(message);
-        SendMessage sendMessage = TelegramUtils.createMessageTemplate(botUser);
+        SendMessage sendMessage = TelegramUtils.createMessageTemplate(user);
         if (adverts.isEmpty()) {
             sendMessage.setText(Text.NOT_FOUND_ADVERTS.getText(message));
-            botUser.setState(State.RENTING);
-            botUserRepository.save(botUser);
+            user.setState(State.RENTING);
+            userRepository.save(user);
             InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
             inlineKeyboardMarkup.setKeyboard(List.of(
                     List.of(
@@ -54,7 +54,7 @@ public class InitRentHandler implements Handler {
                             .collect(Collectors.toList()).toString())
             );
             messages.add(sendMessage);
-            messages.addAll(MenuService.createMenu(botUser, Text.MAIN_MENU.getText()));
+            messages.addAll(MenuService.createMenu(user, Text.MAIN_MENU.getText()));
         }
         return messages;
     }

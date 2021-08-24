@@ -10,12 +10,12 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-@Entity(name = "BOT_USER")
+@Entity(name = "USERS")
 @Setter
 @Getter
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"chatId"})
-public class BotUser {
+public class User {
     @Id
     @GeneratedValue
     private Long id;
@@ -42,7 +42,7 @@ public class BotUser {
     @OneToMany(fetch = FetchType.EAGER)
     private List<District> notificationDistricts;
 
-    public BotUser(Long chatId, String username) {
+    public User(Long chatId, String username) {
         this.chatId = chatId;
         this.username = username;
     }

@@ -22,7 +22,7 @@ public class Advert {
     @Column(name = "username", nullable = false)
     private String username;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     private String name;
 
     @Column(name = "advert_type", nullable = false)
@@ -37,8 +37,14 @@ public class Advert {
     @OneToOne
     private District district;
 
+    @Column(name = "category")
+    private String category;
+
     @Column(name = "full_description")
     private String fullDescription;
+
+    @Column(name = "active")
+    private Boolean isActive;
 
     // todo: add photos
 }

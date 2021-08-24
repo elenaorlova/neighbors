@@ -2,8 +2,8 @@ package neighbors.service;
 
 import lombok.RequiredArgsConstructor;
 import neighbors.entity.Advert;
-import neighbors.entity.BotUser;
-import neighbors.repository.BotUserRepository;
+import neighbors.entity.User;
+import neighbors.repository.UserRepository;
 import neighbors.utils.TelegramUtils;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
@@ -17,13 +17,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class NotificationService {
 
-    private final BotUserRepository botUserRepository;
+    private final UserRepository userRepository;
 
-    public List<PartialBotApiMethod<? extends Serializable>> createNotificationMessage(Advert advert, BotUser currentBotUser) {
-        List<BotUser> botUsers = botUserRepository.findAllBySentNotificationsAndNotificationDistrictsContains(true, advert.getDistrict().getName());
+    public List<PartialBotApiMethod<? extends Serializable>> createNotificationMessage(Advert advert, User currentUser) {
+        List<User> users = userRepository.findAllBySentNotificationsAndNotificationDistrictsContains(true, advert.getDistrict().getName());
         List<PartialBotApiMethod<? extends Serializable>> messages = new ArrayList<>();
-        botUsers.remove(currentBotUser);
-        botUsers.forEach(user -> {
+        users.remove(currentUser);
+        users.forEach(user -> {
             SendMessage sendMessage = TelegramUtils.createMessageTemplate(user);
             sendMessage.setText(advert.getFullDescription());
             messages.add(sendMessage);

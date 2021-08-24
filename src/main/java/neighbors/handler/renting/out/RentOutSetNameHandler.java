@@ -1,12 +1,11 @@
-package neighbors.handler.renting;
+package neighbors.handler.renting.out;
 
 import lombok.RequiredArgsConstructor;
-import neighbors.entity.BotUser;
-import neighbors.enums.AdvertType;
+import neighbors.entity.User;
 import neighbors.enums.bot.State;
 import neighbors.enums.bot.Text;
 import neighbors.handler.Handler;
-import neighbors.repository.BotUserRepository;
+import neighbors.repository.UserRepository;
 import neighbors.service.AdvertService;
 import neighbors.utils.TelegramUtils;
 import org.springframework.stereotype.Component;
@@ -18,24 +17,24 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class RentHandler implements Handler {
+public class RentOutSetNameHandler implements Handler {
 
-    private final BotUserRepository botUserRepository;
+    private final UserRepository userRepository;
     private final AdvertService advertService;
 
     @Override
-    public List<PartialBotApiMethod<? extends Serializable>> handle(BotUser botUser, String message) {
-        SendMessage sendMessage = TelegramUtils.createMessageTemplate(botUser);
-        botUser.setCurrentAdvert(advertService.saveAdvert(botUser, message, AdvertType.RENT).getId());
-        botUser.setState(State.RENTING_SET_PRICE);
-        botUserRepository.save(botUser);
+    public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
+        SendMessage sendMessage = TelegramUtils.createMessageTemplate(user);
+        advertService.setAdvertName(user, message);
         sendMessage.setText(Text.REQUEST_PRODUCT_PRICE.getText());
+        user.setState(State.RENTING_OUT_SET_PRICE);
+        userRepository.save(user);
         return List.of(sendMessage);
     }
 
     @Override
     public List<State> operatedBotState() {
-        return List.of(State.RENTING);
+        return List.of(State.RENTING_OUT_SET_NAME);
     }
 
     @Override

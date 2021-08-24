@@ -10,4 +10,5 @@ import java.util.List;
 public interface AdvertRepository extends JpaRepository<Advert, Long> {
     List<Advert> findAllByNameContains(String name);
     Advert findAdvertByChatIdAndId(Long chatId, Long id);
+    List<Advert> getAdvertByUsername(String username);
 }

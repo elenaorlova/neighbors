@@ -1,7 +1,7 @@
 package neighbors.handler.renting.out;
 
 import lombok.RequiredArgsConstructor;
-import neighbors.entity.BotUser;
+import neighbors.entity.User;
 import neighbors.enums.bot.State;
 import neighbors.enums.bot.Text;
 import neighbors.handler.Handler;
@@ -19,8 +19,8 @@ public class RentOutSetDescriptionHandler implements Handler {
     private final AdvertService advertService;
 
     @Override
-    public List<PartialBotApiMethod<? extends Serializable>> handle(BotUser botUser, String message) {
-        return advertService.setDescription(botUser, message, Text.CONFIRM_ADVERT.getText());
+    public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
+        return advertService.setDescription(user, message, Text.CONFIRM_ADVERT.getText());
     }
 
     @Override

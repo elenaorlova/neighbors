@@ -1,7 +1,10 @@
-package neighbors.handler.renting.out;
+package neighbors.handler.renting;
 
 import lombok.RequiredArgsConstructor;
+import neighbors.entity.Advert;
 import neighbors.entity.User;
+import neighbors.enums.AdvertType;
+import neighbors.enums.CategoryCommand;
 import neighbors.enums.bot.State;
 import neighbors.enums.bot.Text;
 import neighbors.handler.Handler;
@@ -17,7 +20,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class RentOutSetPriceHandler implements Handler {
+public class RentSetCategoryHandler implements Handler {
 
     private final UserRepository userRepository;
     private final AdvertService advertService;
@@ -25,21 +28,23 @@ public class RentOutSetPriceHandler implements Handler {
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
         SendMessage sendMessage = TelegramUtils.createMessageTemplate(user);
-        advertService.setAdvertPrice(user, message);
-        sendMessage.setText(Text.REQUEST_PRODUCT_DESCRIPTION.getText());
-        user.setState(State.RENTING_OUT_SET_DESCRIPTION);
+        Advert advert = advertService.saveAdvert(user, AdvertType.RENT);
+        user.setCurrentAdvert(advert.getId());
+        userRepository.save(user);
+        advertService.setAdvertCategory(advert, message);
+        sendMessage.setText(Text.REQUEST_RENTING_OUT_NAME.getText());
+        user.setState(State.RENTING_SET_NAME);
         userRepository.save(user);
         return List.of(sendMessage);
     }
 
-
     @Override
     public List<State> operatedBotState() {
-        return List.of(State.RENTING_OUT_SET_PRICE);
+        return List.of(State.RENTING_SELECT_CATEGORY);
     }
 
     @Override
     public List<String> operatedCallBackQuery() {
-        return null;
+        return List.of(CategoryCommand.CLOTHES, CategoryCommand.OTHER, CategoryCommand.REPAIR_THINGS);
     }
 }

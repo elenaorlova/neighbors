@@ -2,12 +2,12 @@ package neighbors.utils;
 
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import neighbors.entity.BotUser;
+import neighbors.entity.User;
 
 public class TelegramUtils {
 
-    public static SendMessage createMessageTemplate(BotUser botUser) {
-        return createMessageTemplate(String.valueOf(botUser.getChatId()));
+    public static SendMessage createMessageTemplate(User user) {
+        return createMessageTemplate(String.valueOf(user.getChatId()));
     }
 
     public static SendMessage createMessageTemplate(Long chatId) {
